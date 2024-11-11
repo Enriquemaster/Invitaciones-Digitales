@@ -1,0 +1,7 @@
+{
+  "name": "Invitaciones_digitales",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
