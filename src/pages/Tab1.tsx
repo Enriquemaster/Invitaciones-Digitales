@@ -11,12 +11,24 @@ const Tab1: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+     
+
+       {/* Card Principal - Pasos */}
+       <div className="bg-blue rounded-2xl shadow-sm border border-gray-100 p-8">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                </div>
+                <h2 className="text-5xl font-bold text-gray-800 mb-2">
+                 hola
+                </h2>
+                <p className="text-gray-500 text-lg">
+                  Pasos Totales
+                </p>
+              </div>
+            </div>
+
+
+
       </IonContent>
     </IonPage>
   );
