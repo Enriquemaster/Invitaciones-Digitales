@@ -20,10 +20,10 @@ const Tab1: React.FC = () => {
 
           {/* Opciones del menú */}
           <IonFabList side="top">
-            <IonFabButton color="secondary" routerLink="/Calendario">
+            <IonFabButton color="secondary" routerLink="/ImageGenerator">
               <IonIcon icon={calendarOutline} />
             </IonFabButton>
-            <IonFabButton color="tertiary" routerLink="/Crear-evento">
+            <IonFabButton color="tertiary" routerLink="/ImageGenerator">
               <IonIcon icon={createOutline} />
 
             </IonFabButton>

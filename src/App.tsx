@@ -17,7 +17,7 @@ import Tab3 from './pages/Tab3';
 import Calendario from './pages/Calendario';
 import CrearEvento from './pages/Crear-evento';
 import ImageGenerator from './pages/ImageGenerator';
-import Compartirinvitacion from './pages/CompartirInvitación';
+import Compartirinvitacion from './pages/CompartirInvitacion';
 import CompartirPor from './pages/CompartirPor';
 
 /* Core CSS required for Ionic components to work properly */
@@ -61,7 +61,13 @@ const App: React.FC = () => (
           <Route exact path="/tab1">
             <Tab1 />
           </Route>
-          <Route exact path="/CompartirPor" component={CompartirPor} />
+          
+        <Route path="/CompartirInvitacion" component={Compartirinvitacion } />
+          
+        <Route exact path="/CompartirPor">
+            <CompartirPor />
+          </Route>
+
           <Route exact path="/tab2">
             <Tab2 />
           </Route>
@@ -72,8 +78,7 @@ const App: React.FC = () => (
             <Calendario/>
           </Route>
           
-          <Route path="/CompartirInvitacion" exact component={Compartirinvitacion} />
-
+     
 
           <Route path="/Crear-evento">
             <CrearEvento/>

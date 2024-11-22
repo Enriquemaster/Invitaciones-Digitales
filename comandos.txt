@@ -1,0 +1,3 @@
+npm install @capacitor/share @capacitor/core
+npm install @capacitor/filesystem
+npm install @capacitor/core
