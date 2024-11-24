@@ -18,7 +18,7 @@ const EventInvitationGenerator: React.FC = () => {
   const history = useHistory(); // Inicializar useHistory
 
   const handleShareInvitation = () => {
-    history.push('/CompartirInvitacion', { responseText, invitationData  }); // Navegar y pasar el texto
+    history.push('/capturarInvitacion', { responseText, invitationData  }); // Navegar y pasar el texto
   };
 
 

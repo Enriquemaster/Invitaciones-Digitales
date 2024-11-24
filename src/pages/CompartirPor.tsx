@@ -1,42 +1,36 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Share } from '@capacitor/share';
+import { Browser } from '@capacitor/browser';
 
 interface LocationState {
   imageUrl: string;
+  responseText: string;
 }
 
 const RutaInvitacion: React.FC = () => {
   const location = useLocation<LocationState>();
-  const { imageUrl } = location.state || {}; // Puede ser undefined si no se pasa estado
- 
+  const { imageUrl } = location.state || {}; 
+  const { responseText } = location.state || {}; // Acceder al responseText desde el estado
 
-  // Función para compartir la imagen
-  const shareViaGmail = async () => {
-    if (!imageUrl) {
-      alert("No hay una imagen para compartir.");
-      return;
-    }
 
+  const openGmailDirectly = async () => {
     try {
-      await Share.share({
-        title: 'Invitación',
-        text: 'Te comparto esta invitación especial.',
-        url: imageUrl,
-        dialogTitle: 'Enviar invitación mediante Gmail',
-      });
+      // Definir el asunto
+      const subject = "Cumpleaños"; 
+  
+      // Usar el responseText como el cuerpo del mensaje
+      const body = responseText || "Contenido no disponible"; // Asegúrate de manejar el caso en que no haya texto
+  
+      // Construir la URL con Gmail para abrir el formulario de redacción de correo
+      const gmailUrl = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+      // Abrir Gmail en el navegador con el asunto y cuerpo predefinidos
+      await Browser.open({ url: gmailUrl });
     } catch (error) {
-      console.error('Error al compartir la invitación:', error);
+      console.error("Error al abrir Gmail en el navegador:", error);
     }
   };
- 
-  // Si la imagen no está presente, puedes redirigir al usuario a otra página o mostrar un mensaje.
-  useEffect(() => {
-    if (!imageUrl) {
-      console.error("No se ha recibido la URL de la imagen.");
-    }
-  }, [imageUrl]);
-  
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-4">Invitación Capturada</h1>
@@ -65,10 +59,10 @@ const RutaInvitacion: React.FC = () => {
           <p className="mt-2 text-sm font-medium text-center">Mensajes</p>
         </div>
         <div>
-          <button onClick={shareViaGmail}>
+          <button onClick={openGmailDirectly}>
             <img src="/iconos/gmail.png" alt="Gmail" className="rounded-lg mx-auto w-16 h-16" />
           </button>
-          <p className="mt-2 text-sm font-medium text-center">Gmail</p>
+          <p className="mt-2 text-sm font-medium text-center">Abrir Gmail</p>
         </div>
       </div>
     </div>

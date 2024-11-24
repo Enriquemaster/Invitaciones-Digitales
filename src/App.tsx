@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -17,7 +17,7 @@ import Tab3 from './pages/Tab3';
 import Calendario from './pages/Calendario';
 import CrearEvento from './pages/Crear-evento';
 import ImageGenerator from './pages/ImageGenerator';
-import Compartirinvitacion from './pages/CompartirInvitacion';
+import CapturarInvitacion from './pages/capturarInvitacion'; // Ajusta la ruta según tu proyecto
 import CompartirPor from './pages/CompartirPor';
 
 /* Core CSS required for Ionic components to work properly */
@@ -62,11 +62,10 @@ const App: React.FC = () => (
             <Tab1 />
           </Route>
           
-        <Route path="/CompartirInvitacion" component={Compartirinvitacion } />
-          
-        <Route exact path="/CompartirPor">
-            <CompartirPor />
-          </Route>
+          <Switch>
+        <Route exact path="/capturarInvitacion" component={CapturarInvitacion} />
+        <Route exact path="/CompartirPor" component={CompartirPor} />
+      </Switch>
 
           <Route exact path="/tab2">
             <Tab2 />
