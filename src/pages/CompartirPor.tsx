@@ -1,30 +1,68 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory  } from 'react-router-dom';
 import { Browser } from '@capacitor/browser';
+import storage from './storage/storage'; 
+import { useState, useEffect } from 'react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
 
 interface LocationState {
   imageUrl: string;
   responseText: string;
+  eventType: string;
 }
 
 const RutaInvitacion: React.FC = () => {
   const location = useLocation<LocationState>();
   const { imageUrl } = location.state || {}; 
-  const { responseText } = location.state || {}; // Acceder al responseText desde el estado
+  const { responseText  } = location.state || {}; 
+  const { eventType  } = location.state || {}; 
+
+  const [showModal, setShowModal] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
+
+  const openWhatsApp = async () => {
+    try {
+      const message = `¡Hola! Te invito a un evento de tipo "${eventType}". ${responseText || ''}`;
+
+      if (imageUrl) {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}%0A${encodeURIComponent(imageUrl)}`;
+        await Browser.open({ url: whatsappUrl });
+      } else {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+        await Browser.open({ url: whatsappUrl });
+      }
+    } catch (error) {
+      console.error("Error al abrir WhatsApp en el navegador:", error);
+    }
+  };
+
+
+  const saveImage = async () => {
+    if (imageUrl && !isSaved) {
+      const images = (await storage.get('invitations')) || [];
+      if (!images.includes(imageUrl)) {
+        images.push(imageUrl);
+        await storage.set('invitations', images);
+        setIsSaved(true); // Marca como guardada
+        console.log('Imagen guardada correctamente.');
+      }
+    }
+  };
+
+
+
+
 
 
   const openGmailDirectly = async () => {
     try {
-      // Definir el asunto
-      const subject = "Cumpleaños"; 
+      const subject = eventType || "Invitación"; 
+      const body = responseText || "Contenido no disponible";
   
-      // Usar el responseText como el cuerpo del mensaje
-      const body = responseText || "Contenido no disponible"; // Asegúrate de manejar el caso en que no haya texto
-  
-      // Construir la URL con Gmail para abrir el formulario de redacción de correo
+
       const gmailUrl = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   
-      // Abrir Gmail en el navegador con el asunto y cuerpo predefinidos
+  
       await Browser.open({ url: gmailUrl });
     } catch (error) {
       console.error("Error al abrir Gmail en el navegador:", error);
@@ -44,10 +82,23 @@ const RutaInvitacion: React.FC = () => {
         <p>No se encontró la imagen capturada. Por favor, regresa a la página anterior.</p>
       )}
 
+
+      {imageUrl ? (
+      <div className="flex justify-center">
+          <IonButton onClick={() => setShowModal(true)} color="primary">
+          Guardar Imagen
+        </IonButton>
+          </div>
+          ) : (
+            <p>No se encontró la imagen capturada. Por favor, regresa a la página anterior.</p>
+            )}
+
       {/* Botones para compartir */}
       <div className="grid grid-cols-4 gap-4 mt-8">
         <div>
-          <img src="/iconos/whatsapp.png" alt="WhatsApp" className="rounded-lg mx-auto w-16 h-16" />
+          <button onClick={openWhatsApp}>
+            <img src="/iconos/whatsapp.png" alt="WhatsApp" className="rounded-lg mx-auto w-16 h-16" />
+          </button>
           <p className="mt-2 text-sm font-medium text-center">WhatsApp</p>
         </div>
         <div>

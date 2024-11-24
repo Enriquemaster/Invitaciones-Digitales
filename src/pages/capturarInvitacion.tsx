@@ -41,7 +41,7 @@ const CapturarInvitacion: React.FC = () => {
         const imageUrl = canvas.toDataURL();
         history.push({
           pathname: '/CompartirPor',
-          state: { imageUrl, responseText },
+          state: { imageUrl, responseText, eventType },
         });
       });
     }

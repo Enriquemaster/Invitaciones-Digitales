@@ -2,3 +2,7 @@ npm install @capacitor/share @capacitor/core
 npm install @capacitor/filesystem
 npm install @capacitor/core
 npm install @capacitor/browser
+npm install cordova-plugin-x-socialsharing
+
+npm install @capacitor/filesystem
+npm install @ionic/storage
