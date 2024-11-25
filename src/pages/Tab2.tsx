@@ -21,6 +21,7 @@ const Tab2: React.FC = () => {
     guest: "",
     location: "",
     date: "",
+    celebrant: "",
   });
   const [invitations, setInvitations] = useState<any[]>([]);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -30,14 +31,14 @@ const Tab2: React.FC = () => {
     const initStorage = async () => {
       await storage.create();
       const storedInvitations = await storage.get("invitations");
-      setInvitations(storedInvitations || []); // Manejo de lista vacía
+      if (storedInvitations) setInvitations(storedInvitations);
     };
     initStorage();
   }, []);
 
   const saveInvitation = async () => {
     if (!eventData.type || !eventData.guest || !eventData.location || !eventData.date) {
-      setToastMessage("Por favor, completa todos los campos.");
+      setToastMessage("Por favor, completa todos los campos requeridos.");
       return;
     }
 
@@ -46,8 +47,8 @@ const Tab2: React.FC = () => {
     setInvitations(updatedInvitations);
     await storage.set("invitations", updatedInvitations);
 
-    setEventData({ type: "", guest: "", location: "", date: "" });
-    setToastMessage("¡Invitación guardada!");
+    setEventData({ type: "", guest: "", location: "", date: "", celebrant: "" });
+    setToastMessage("¡Invitación guardada con éxito!");
   };
 
   const deleteInvitation = async (id: number) => {
@@ -59,18 +60,39 @@ const Tab2: React.FC = () => {
 
   const renderCards = () => {
     return invitations.map((invitation) => (
-      <div key={invitation.id} className="event-card">
-        <h2>{invitation.type || "Evento"}</h2>
-        <p><strong>Invitado:</strong> {invitation.guest}</p>
-        <p><strong>Lugar:</strong> {invitation.location}</p>
-        <p><strong>Fecha:</strong> {new Date(invitation.date).toLocaleString()}</p>
-        <IonButton
-          color="danger"
-          fill="solid"
-          onClick={() => deleteInvitation(invitation.id)}
-        >
-          Eliminar
-        </IonButton>
+      <div
+        key={invitation.id}
+        className={`event-card ${invitation.type.toLowerCase()}`}
+      >
+        <div className="card-header">
+          <div className="icon"></div>
+          <h2>
+            {invitation.type === "Cumpleaños"
+              ? "¡Feliz Cumpleaños!"
+              : invitation.type === "Boda"
+              ? "¡Felicidades por la boda!"
+              : invitation.type === "Fiesta"
+              ? "¡Es hora de una Fiesta!"
+              : "¡Próxima Reunión!"}
+          </h2>
+        </div>
+        <div className="card-body">
+          <p><strong>Invitado:</strong> {invitation.guest}</p>
+          <p><strong>Lugar:</strong> {invitation.location}</p>
+          <p><strong>Fecha:</strong> {new Date(invitation.date).toLocaleString()}</p>
+          {invitation.type === "Cumpleaños" && (
+            <p><strong>Cumpleañero:</strong> {invitation.celebrant}</p>
+          )}
+        </div>
+        <div className="card-footer">
+          <IonButton
+            color="danger"
+            fill="solid"
+            onClick={() => deleteInvitation(invitation.id)}
+          >
+            Eliminar
+          </IonButton>
+        </div>
       </div>
     ));
   };
@@ -112,9 +134,23 @@ const Tab2: React.FC = () => {
               <IonLabel position="floating">Fecha y Hora</IonLabel>
               <IonDatetime
                 value={eventData.date}
-                onIonChange={(e) => setEventData({ ...eventData, date: e.detail.value! })}
+                onIonChange={(e) =>
+                  setEventData({
+                    ...eventData,
+                    date: typeof e.detail.value === "string" ? e.detail.value : "",
+                  })
+                }
               />
             </IonItem>
+            {eventData.type === "Cumpleaños" && (
+              <IonItem>
+                <IonLabel position="floating">Cumpleañero</IonLabel>
+                <IonInput
+                  value={eventData.celebrant}
+                  onIonChange={(e) => setEventData({ ...eventData, celebrant: e.detail.value! })}
+                />
+              </IonItem>
+            )}
           </IonList>
           <IonButton expand="block" onClick={saveInvitation}>
             Guardar Invitación
