@@ -1,7 +1,7 @@
-import { useLocation, useHistory  } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Browser } from '@capacitor/browser';
-import storage from './storage/storage'; 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import storage from './storage/storage'; // Importa tu configuración de storage
 import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
 
 interface LocationState {
@@ -12,60 +12,45 @@ interface LocationState {
 
 const RutaInvitacion: React.FC = () => {
   const location = useLocation<LocationState>();
-  const { imageUrl } = location.state || {}; 
-  const { responseText  } = location.state || {}; 
-  const { eventType  } = location.state || {}; 
-
+  const { imageUrl, responseText, eventType } = location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
 
   const openWhatsApp = async () => {
     try {
       const message = `¡Hola! Te invito a un evento de tipo "${eventType}". ${responseText || ''}`;
-
-      if (imageUrl) {
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}%0A${encodeURIComponent(imageUrl)}`;
-        await Browser.open({ url: whatsappUrl });
-      } else {
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-        await Browser.open({ url: whatsappUrl });
-      }
+      const whatsappUrl = imageUrl
+        ? `https://wa.me/?text=${encodeURIComponent(message)}%0A${encodeURIComponent(imageUrl)}`
+        : `https://wa.me/?text=${encodeURIComponent(message)}`;
+      await Browser.open({ url: whatsappUrl });
     } catch (error) {
-      console.error("Error al abrir WhatsApp en el navegador:", error);
+      console.error("Error al abrir WhatsApp:", error);
     }
   };
-
 
   const saveImage = async () => {
-    if (imageUrl && !isSaved) {
-      const images = (await storage.get('invitations')) || [];
-      if (!images.includes(imageUrl)) {
-        images.push(imageUrl);
-        await storage.set('invitations', images);
-        setIsSaved(true); // Marca como guardada
+    if (imageUrl) {
+      const storedImages = (await storage.get('invitations')) || [];
+      if (!storedImages.includes(imageUrl)) {
+        const updatedImages = [...storedImages, imageUrl];
+        await storage.set('invitations', updatedImages);
+        setIsSaved(true);
         console.log('Imagen guardada correctamente.');
+        setShowModal(false);
+      } else {
+        console.log('La imagen ya está guardada.');
       }
     }
   };
-
-
-
-
-
 
   const openGmailDirectly = async () => {
     try {
-      const subject = eventType || "Invitación"; 
+      const subject = eventType || "Invitación";
       const body = responseText || "Contenido no disponible";
-  
-
       const gmailUrl = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  
-  
       await Browser.open({ url: gmailUrl });
     } catch (error) {
-      console.error("Error al abrir Gmail en el navegador:", error);
+      console.error("Error al abrir Gmail:", error);
     }
   };
 
@@ -73,7 +58,6 @@ const RutaInvitacion: React.FC = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-4">Invitación Capturada</h1>
 
-      {/* Mostrar la imagen capturada si existe */}
       {imageUrl ? (
         <div className="flex justify-center">
           <img src={imageUrl} alt="Invitación Capturada" className="max-w-full rounded-lg shadow-lg" />
@@ -82,18 +66,14 @@ const RutaInvitacion: React.FC = () => {
         <p>No se encontró la imagen capturada. Por favor, regresa a la página anterior.</p>
       )}
 
-
-      {imageUrl ? (
-      <div className="flex justify-center">
+      {imageUrl && (
+        <div className="flex justify-center mt-4">
           <IonButton onClick={() => setShowModal(true)} color="primary">
-          Guardar Imagen
-        </IonButton>
-          </div>
-          ) : (
-            <p>No se encontró la imagen capturada. Por favor, regresa a la página anterior.</p>
-            )}
+            Guardar Imagen
+          </IonButton>
+        </div>
+      )}
 
-      {/* Botones para compartir */}
       <div className="grid grid-cols-4 gap-4 mt-8">
         <div>
           <button onClick={openWhatsApp}>
@@ -116,6 +96,27 @@ const RutaInvitacion: React.FC = () => {
           <p className="mt-2 text-sm font-medium text-center">Abrir Gmail</p>
         </div>
       </div>
+
+      <IonModal isOpen={showModal}>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Guardar Imagen</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <div className="p-4">
+            <p>¿Deseas guardar esta imagen en tus invitaciones?</p>
+            <div className="flex justify-around mt-4">
+              <IonButton onClick={saveImage} color="success">
+                Guardar
+              </IonButton>
+              <IonButton onClick={() => setShowModal(false)} color="danger">
+                Cancelar
+              </IonButton>
+            </div>
+          </div>
+        </IonContent>
+      </IonModal>
     </div>
   );
 };

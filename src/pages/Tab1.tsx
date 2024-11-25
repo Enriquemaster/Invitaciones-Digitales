@@ -44,8 +44,7 @@ const Tab1: React.FC = () => {
           </p>
 
 
-          <PulsatingButton  routerLink="/Tab2">¡Comienza ahora!</PulsatingButton>
-
+      
           
           <div className="social-icons">
             <img src="/iconos/facebook.png" alt="Facebook" />
