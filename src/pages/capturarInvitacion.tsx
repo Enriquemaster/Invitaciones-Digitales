@@ -2,6 +2,7 @@ import React from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonText, IonButton } from '@ionic/react';
 import { useLocation, useHistory } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import { cloudinaryConfig } from '../config/cloudinaryConfig';
 import './css/felizcum.css';
 
 interface LocationState {

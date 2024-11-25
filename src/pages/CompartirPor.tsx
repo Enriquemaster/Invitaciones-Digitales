@@ -3,6 +3,7 @@ import { Browser } from '@capacitor/browser';
 import { useState } from 'react';
 import storage from './storage/storage'; // Importa tu configuración de storage
 import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
+import { cloudinaryConfig } from '../config/cloudinaryConfig';
 
 interface LocationState {
   imageUrl: string;
@@ -18,30 +19,59 @@ const RutaInvitacion: React.FC = () => {
 
   const openWhatsApp = async () => {
     try {
+      // Verifica si tienes la URL de la imagen de Cloudinary
       const message = `¡Hola! Te invito a un evento de tipo "${eventType}". ${responseText || ''}`;
-      const whatsappUrl = imageUrl
-        ? `https://wa.me/?text=${encodeURIComponent(message)}%0A${encodeURIComponent(imageUrl)}`
-        : `https://wa.me/?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       await Browser.open({ url: whatsappUrl });
     } catch (error) {
       console.error("Error al abrir WhatsApp:", error);
     }
   };
-
-  const saveImage = async () => {
+  const saveImage2 = async () => {
     if (imageUrl) {
-      const storedImages = (await storage.get('invitations')) || [];
-      if (!storedImages.includes(imageUrl)) {
-        const updatedImages = [...storedImages, imageUrl];
-        await storage.set('invitations', updatedImages);
-        setIsSaved(true);
-        console.log('Imagen guardada correctamente.');
-        setShowModal(false);
-      } else {
-        console.log('La imagen ya está guardada.');
+      console.log('Imagen a subir:', imageUrl);
+      try {
+        const formData = new FormData();
+        
+        if (imageUrl.startsWith('data:image/')) {
+          formData.append('file', imageUrl); // Base64
+        } else {
+          formData.append('file', imageUrl); // Archivo
+        }
+  
+        formData.append('upload_preset', cloudinaryConfig.upload_preset);
+  
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+  
+        const data = await response.json();
+        if (data.secure_url) {
+          const cloudinaryImageUrl = data.secure_url; 
+          console.log('Imagen subida correctamente en Cloudinary:', cloudinaryImageUrl);
+  
+          // Guardar la URL pública en el almacenamiento local
+          const storedImages = (await storage.get('invitations')) || [];
+          const updatedImages = [...storedImages, cloudinaryImageUrl];
+          await storage.set('invitations', updatedImages);
+  
+          setIsSaved(true);
+          setShowModal(false);
+        } else {
+          console.log('No se pudo obtener la URL de la imagen de Cloudinary:', data);
+        }
+      } catch (error) {
+        console.error('Error al subir la imagen a Cloudinary:', error);
       }
+    } else {
+      console.log('No se ha proporcionado una imagen válida.');
     }
   };
+  
+
+
+
 
   const openGmailDirectly = async () => {
     try {
@@ -107,7 +137,7 @@ const RutaInvitacion: React.FC = () => {
           <div className="p-4">
             <p>¿Deseas guardar esta imagen en tus invitaciones?</p>
             <div className="flex justify-around mt-4">
-              <IonButton onClick={saveImage} color="success">
+              <IonButton onClick={saveImage2} color="success">
                 Guardar
               </IonButton>
               <IonButton onClick={() => setShowModal(false)} color="danger">

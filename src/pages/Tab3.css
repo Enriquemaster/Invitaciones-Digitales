@@ -1,0 +1,17 @@
+/* Estilo para el modal de compartir */
+.custom-modal-bottom {
+  --height: 20%;
+  --border-radius: 20px 20px 20px 20px;
+  --background: #ffffff;
+  --box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
