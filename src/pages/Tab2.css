@@ -1,0 +1,111 @@
+.form-container {
+    padding: 16px;
+  }
+  
+  .form-container h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+  
+  .ion-list {
+    margin-bottom: 16px;
+  }
+  
+  /* Contenedor principal */
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px;
+  }
+  
+  /* Estilo base para todas las tarjetas */
+  .event-card {
+    width: 100%;
+    max-width: 350px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    color: white;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .event-card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Estilo del encabezado */
+  .card-header {
+    padding: 16px;
+  }
+  
+  .card-header .icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+  
+  .card-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  /* Cuerpo de la tarjeta */
+  .card-body {
+    padding: 16px;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .card-body p {
+    margin: 8px 0;
+  }
+  
+  /* Pie de la tarjeta */
+  .card-footer {
+    padding: 16px;
+    display: flex;
+    justify-content: space-around;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Temática Cumpleaños */
+  .event-card.cumpleaños {
+    background: url('/assets/birthday-bg.jpg') no-repeat center center / cover;
+  }
+  
+  .event-card.cumpleaños .icon::before {
+    content: '🎉';
+  }
+  
+  /* Temática Boda */
+  .event-card.boda {
+    background: url('/assets/wedding-bg.jpg') no-repeat center center / cover;
+  }
+  
+  .event-card.boda .icon::before {
+    content: '💍';
+  }
+  
+  /* Temática Fiesta */
+  .event-card.fiesta {
+    background: url('/assets/party-bg.jpg') no-repeat center center / cover;
+  }
+  
+  .event-card.fiesta .icon::before {
+    content: '🍸';
+  }
+  
+  /* Temática Reunión */
+  .event-card.reunión {
+    background: url('/assets/meeting-bg.jpg') no-repeat center center / cover;
+  }
+  
+  .event-card.reunión .icon::before {
+    content: '📂';
+  }

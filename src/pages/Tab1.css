@@ -1,0 +1,94 @@
+.welcome-section {
+    background: linear-gradient(to right, #ff7eb3, #ff758c);
+    text-align: center;
+    color: white;
+    padding: 2rem 1rem;
+    border-radius: 0 0 20px 20px;
+    position: relative;
+  }
+  
+  .welcome-section h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-section p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+ 
+  
+  /* Iconos de redes sociales */
+  .social-icons {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .social-icons img {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .social-icons img:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Sección de características */
+  .features-section {
+    padding: 2rem 1rem;
+  }
+  
+  .features-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #444;
+  }
+  
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .feature-card {
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .feature-card .card-icon {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 2px solid #ff758c;
+  }
+  
+  .feature-card ion-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #ff758c;
+  }
+  
+  .feature-card ion-card-content {
+    font-size: 1rem;
+    color: #666;
+    text-align: justify;
+    padding: 1rem;
+  }
