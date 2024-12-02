@@ -5,13 +5,19 @@ import {
   IonTitle,
   IonToolbar,
   IonButton,
+  IonModal,
+  IonImg,
+  IonIcon,
 } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import { Browser } from '@capacitor/browser';
 import storage from './storage/storage';
+import { close } from 'ionicons/icons';
 
 const Tab3: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   // Cargar imágenes desde el almacenamiento al iniciar el componente
   useEffect(() => {
@@ -38,6 +44,16 @@ const Tab3: React.FC = () => {
     }
   };
 
+  const openModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedImage(null);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -54,7 +70,8 @@ const Tab3: React.FC = () => {
                   <img
                     src={imageUrl}
                     alt={`Imagen ${index}`}
-                    className="w-full h-auto rounded-lg shadow-lg"
+                    className="w-full h-auto rounded-lg shadow-lg cursor-pointer"
+                    onClick={() => openModal(imageUrl)} // Abrir modal al hacer clic
                   />
                   <div className="flex justify-between mt-2">
                     <IonButton
@@ -79,6 +96,25 @@ const Tab3: React.FC = () => {
             <p>No tienes imágenes guardadas.</p>
           )}
         </div>
+
+        {/* Modal para ver imagen en grande */}
+        <IonModal isOpen={showModal} onDidDismiss={closeModal}>
+          <div className="flex justify-center items-center h-full bg-black bg-opacity-75">
+            {selectedImage && (
+              <div className="relative">
+                <IonImg src={selectedImage} alt="Imagen grande" className="max-w-full max-h-full" />
+                <IonButton
+                  color="danger"
+                  size="small"
+                  onClick={closeModal}
+                  className="absolute top-4 right-4"
+                >
+                  <IonIcon icon={close} />
+                </IonButton>
+              </div>
+            )}
+          </div>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

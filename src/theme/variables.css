@@ -1,4 +1,25 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
+:root {
+ /*--ion-background-color: #192E63; /* El color sólido */
+ 
+  }
 
+  #cards-title {
+    font-family: 'Luckiest Guy', system-ui;
+    font-weight: 10;
+  }
+
+  #cards-title1  {
+    font-family: 'Cinzel Variable', serif;
+    font-style: normal;
+    font-weight: 800 ;
+  }
+
+  #cards-title2 {
+    font-family: 'Dancing Script Variable', cursive;
+    font-style: normal;
+  font-display: swap;
+  font-weight: 500 700;
+  }

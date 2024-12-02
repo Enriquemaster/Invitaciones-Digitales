@@ -17,6 +17,7 @@ import {
 import { add, calendarOutline, createOutline } from "ionicons/icons";
 import "./Tab1.css";
 import PulsatingButton from "@/components/ui/pulsating-button";
+import { Lumiflex } from "uvcanvas"
 
 export function PulsatingButtonDemo() {
   return <PulsatingButton>Diego</PulsatingButton>;
@@ -35,8 +36,12 @@ const Tab1: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
+
+        
+
         {/* Sección de bienvenida */}
         <div className="welcome-section">
+          
           <h1>¡Bienvenido a EvoParty!</h1>
           <p>
             Diseña invitaciones increíbles, organiza tus eventos y sorprende a
@@ -89,6 +94,9 @@ const Tab1: React.FC = () => {
             </IonCard>
           </div>
         </div>
+
+       
+
 
         {/* Botón flotante con opciones */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">

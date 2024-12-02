@@ -1,9 +1,11 @@
 import { useLocation } from 'react-router-dom';
 import { Browser } from '@capacitor/browser';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import storage from './storage/storage'; // Importa tu configuración de storage
 import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
 import { cloudinaryConfig } from '../config/cloudinaryConfig';
+import confetti from "canvas-confetti";
+
 
 interface LocationState {
   imageUrl: string;
@@ -16,6 +18,10 @@ const RutaInvitacion: React.FC = () => {
   const { imageUrl, responseText, eventType } = location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  
+  
+
+   
 
   const openWhatsApp = async () => {
     try {
@@ -84,9 +90,66 @@ const RutaInvitacion: React.FC = () => {
     }
   };
 
+
+  const handleClick = () => {
+    const scalar = 2;
+    const triangle = confetti.shapeFromPath({
+      path: "M0 10 L5 0 L10 10z",
+    });
+    const square = confetti.shapeFromPath({
+      path: "M0 0 L10 0 L10 10 L0 10 Z",
+    });
+    const coin = confetti.shapeFromPath({
+      path: "M5 0 A5 5 0 1 0 5 10 A5 5 0 1 0 5 0 Z",
+    });
+    const tree = confetti.shapeFromPath({
+      path: "M5 0 L10 10 L0 10 Z",
+    });
+
+    const defaults = {
+      spread: 360,
+      ticks: 60,
+      gravity: 0,
+      decay: 0.96,
+      startVelocity: 20,
+      shapes: [triangle, square, coin, tree],
+      scalar,
+    };
+
+    const shoot = () => {
+      confetti({
+        ...defaults,
+        particleCount: 30,
+      });
+
+      confetti({
+        ...defaults,
+        particleCount: 5,
+      });
+
+      confetti({
+        ...defaults,
+        particleCount: 15,
+        scalar: scalar / 2,
+        shapes: ["circle"],
+      });
+    };
+
+    setTimeout(shoot, 0);
+    setTimeout(shoot, 100);
+    setTimeout(shoot, 200);
+  };
+
+  
+  
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-4">Invitación Capturada</h1>
+
+ 
+    
+     
 
       {imageUrl ? (
         <div className="flex justify-center">
@@ -152,3 +215,4 @@ const RutaInvitacion: React.FC = () => {
 };
 
 export default RutaInvitacion;
+
