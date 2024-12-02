@@ -50,7 +50,7 @@ const EventInvitationGenerator: React.FC = () => {
   const handleGenerateInvitation = async () => {
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'cumpleaños' && (!birthdayName || !birthdayAge))) {
       setResponseText(`¡Hola, ${inviteeName}! 
-      Tenemos el placer de invitarte a un evento único y especial que no querrás perderte. Este evento tendrá lugar el próximo ${eventDate} a las ${eventTime} en ${eventLocation}, un lugar especialmente preparado para esta ocasión tan memorable. 
+      Tenemos el placer de invitarte a un evento único y especial que no querrás perderte. Este evento tendrá lugar el próximo ${eventDate} a las ${eventTime} horas en ${eventLocation}, un lugar especialmente preparado para esta ocasión tan memorable. 
 
       Nos encantaría contar con tu presencia, ya que tu compañía hará que este día sea aún más especial y significativo. Prepárate para disfrutar de una velada llena de momentos inolvidables, risas y una experiencia que quedará grabada en nuestros corazones.
 
@@ -177,15 +177,17 @@ const EventInvitationGenerator: React.FC = () => {
               <div>
                 <IonLabel>Fecha del evento</IonLabel>
                 <IonInput
+                 type="date" // Tipo date para seleccionar la fecha
                   value={eventDate}
                   onIonChange={(e) => setEventDate(e.detail.value!)}
                   placeholder="Fecha del evento"
                   className="border border-gray-300 p-2 rounded-md"
-                />
+                  />
               </div>
               <div>
                 <IonLabel>Hora del evento</IonLabel>
                 <IonInput
+                  type="time" // Tipo time para seleccionar la hora
                   value={eventTime}
                   onIonChange={(e) => setEventTime(e.detail.value!)}
                   placeholder="Hora del evento"
