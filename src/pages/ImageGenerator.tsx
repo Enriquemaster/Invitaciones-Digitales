@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { IonButton, IonContent, IonInput, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonLabel } from '@ionic/react';
+import { IonButton, IonContent, IonInput, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonLabel, IonIcon } from '@ionic/react';
 import ShimmerButton from "@/components/ui/shimmer-button";
 import { useHistory } from 'react-router-dom'; // Importar useHistory
 import storageCalendario from './storage/storageCalendario'; 
+import { informationCircleOutline } from 'ionicons/icons';
 import confetti from "canvas-confetti";
 
 // Define un tipo para los eventos
@@ -251,7 +252,7 @@ const showAllFromStorage = async () => {
       <div className="p-6 space-y-6">
           <h1 className="text-2xl font-bold text-center">Crea tu invitación</h1>
           
-          <div className="space-y-4">
+          <div className="space-y-4 p-4">
          
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -259,11 +260,18 @@ const showAllFromStorage = async () => {
                 <IonInput
                   value={inviteeName}
                   onIonChange={(e) => setInviteeName(e.detail.value!)}
-                  placeholder="Nombre del invitado"
+                  placeholder="Opcional"
                   className="border border-gray-300 p-2 rounded-md"
                 />
+                <IonIcon 
+      icon={informationCircleOutline} 
+      className="text-gray-500 cursor-pointer"
+      onClick={() => alert('Este campo es opcional, tu decides si ira dirigido a una persona o sera de manera general, en Evoparty tu eliges.')}
+    />
               </div>
+              
               <div>
+                
                 <IonLabel>Fecha del evento</IonLabel>
                 <IonInput
                  type="date" // Tipo date para seleccionar la fecha
@@ -282,7 +290,9 @@ const showAllFromStorage = async () => {
                   placeholder="Hora del evento"
                   className="border border-gray-300 p-2 rounded-md"
                 />
+         
               </div>
+              
               <div>
                 <IonLabel>Lugar del evento</IonLabel>
                 <IonInput
@@ -295,8 +305,7 @@ const showAllFromStorage = async () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <IonLabel className="font-semibold text-lg">Tipo de evento</IonLabel>
+          <div className="p-2">
             <div className="space-y-4">
   <label htmlFor="eventType" className="font-semibold text-lg">
     Tipo de evento
@@ -324,7 +333,7 @@ const showAllFromStorage = async () => {
               <h2 className="font-semibold text-lg">Detalles del cumpleaños</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <IonLabel>Nombre del cumpleañero</IonLabel>
+                  <IonLabel>cumpleañero</IonLabel>
                   <IonInput
                     value={birthdayName}
                     onIonChange={(e) => setBirthdayName(e.detail.value!)}
@@ -433,9 +442,9 @@ const showAllFromStorage = async () => {
         </div>
 
         <div className="flex justify-center p-4">
-             <IonButton className="w-full" onClick={handleShareInvitation}>
+             <ShimmerButton className="w-full" onClick={handleShareInvitation}>
               Compartir invitación
-            </IonButton>
+            </ShimmerButton>
           </div>
       </IonContent>
     </IonPage>

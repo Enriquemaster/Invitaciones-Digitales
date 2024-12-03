@@ -46,7 +46,7 @@ const EventsCalendarView: React.FC = () => {
 
           loadedEvents.push({
             title:  storedEvent.icon, 
-            title1: `Programaste un evento de: ${storedEvent.eventType} para ${storedEvent.inviteeName}.`,
+            title1: `Programaste un evento de: ${storedEvent.eventType}`,
             start,
             end,
             type: storedEvent.eventType,

@@ -140,8 +140,30 @@ const CapturarInvitacion: React.FC = () => {
       ];
 
 
+       // Rutas de imágenes de formales
+       const imagesreuniones = [
+        '/images/reuniones/r1.png',
+        '/images/reuniones/r2.png',
+        '/images/reuniones/r3.png',
+        '/images/reuniones/r4.png',
+        '/images/reuniones/r5.png',
+        '/images/reuniones/r6.png',
+        '/images/reuniones/r7.png',
+        '/images/reuniones/r8.png',
+      ];
 
-  const allImages = [...images, ...images1, ...images2, ...imagesboda];
+      const imagesreuniones1 = [
+        '/images/reuniones/r9.png',
+        '/images/reuniones/r10.png',
+        '/images/reuniones/r11.png',
+        '/images/reuniones/r12.png',
+        '/images/reuniones/r13.png',
+      ];
+
+
+
+
+  const allImages = [...images, ...images1, ...images2, ...imagesboda, ... imagesreuniones, ...imagesreuniones1];
 
   const [selectedImage, setSelectedImage] = useState<string>(allImages[0]);
 
@@ -349,6 +371,64 @@ const CapturarInvitacion: React.FC = () => {
 
 
 
+{eventType === 'reunion' && (
+  <>
+    {/* Sección de Carrusel: Para Niños */}
+    <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Temas Claros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+        spaceBetween={15}
+        slidesPerView={1.2}
+        centeredSlides={true}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="rounded-md px-6"
+      >
+        {imagesreuniones.map((src, index) => (
+          <SwiperSlide key={index} className="pt-4 px-6">
+            <img
+              src={src}
+              alt={`Slide ${index}`}
+              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+              onClick={() => handleImageClick(src)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
+
+     {/* Sección de Carrusel: Para Niños */}
+     <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Temas Oscuros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+        spaceBetween={15}
+        slidesPerView={1.2}
+        centeredSlides={true}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="rounded-md px-6"
+      >
+        {imagesreuniones1.map((src, index) => (
+          <SwiperSlide key={index} className="pt-4 px-6">
+            <img
+              src={src}
+              alt={`Slide ${index}`}
+              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+              onClick={() => handleImageClick(src)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
+
+  </>
+)}
+
+
+
+
 
 <div className="overflow-x-auto flex ">
           {/* Sección de texto */}
@@ -390,7 +470,9 @@ const CapturarInvitacion: React.FC = () => {
     <p className="text-lg mt-2 text-gray-600">A un evento muy especial</p>
     {/* Mostrar los detalles del evento */}
   <div className="mb-4 text-justify">
-    <p><strong>Nombre del invitado:</strong> {inviteeName}</p>
+  {inviteeName && (
+  <p><strong>Nombre del invitado:</strong> {inviteeName}</p>
+)}
     <p><strong>Fecha del evento:</strong> {eventDate}</p>
     <p><strong>Hora del evento:</strong> {eventTime}</p>
     <p><strong>Lugar del evento:</strong> {eventLocation}</p>
@@ -408,6 +490,14 @@ const CapturarInvitacion: React.FC = () => {
         <p><strong>Edad de la Esposa:</strong> {nameperson2}</p>
       </>
     )}
+
+{eventType === 'fiesta' && (
+      <>
+        <p><strong>Asunto:</strong> {asunto}</p>
+        <p><strong>Organizador:</strong> {organizador}</p>
+      </>
+    )}
+
 
   </div>
   </div>
