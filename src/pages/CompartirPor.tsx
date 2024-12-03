@@ -11,6 +11,8 @@ interface LocationState {
   imageUrl: string;
   responseText: string;
   eventType: string;
+  eventDate: string;
+  eventTime: string;
 }
 
 const RutaInvitacion: React.FC = () => {
@@ -45,6 +47,7 @@ const RutaInvitacion: React.FC = () => {
           formData.append('file', imageUrl); // Archivo
         }
   
+        
         formData.append('upload_preset', cloudinaryConfig.upload_preset);
   
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/upload`, {

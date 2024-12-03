@@ -1,171 +1,136 @@
-import React, { useState, useEffect } from "react";
-import {
-  IonContent,
-  IonPage,
-  IonButton,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonDatetime,
-  IonLabel,
-  IonItem,
-  IonList,
-  IonToast,
-} from "@ionic/react";
-import { Storage } from "@ionic/storage";
-import "./Tab2.css";
+import React, { useState, useEffect } from 'react';
+import { 
+  IonPage, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonCard, 
+  IonCardHeader, 
+  IonCardTitle, 
+  IonCardContent, 
+  IonButton 
+} from '@ionic/react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import storageCalendario from './storage/storageCalendario'; 
 
-const Tab2: React.FC = () => {
-  const [eventData, setEventData] = useState({
-    type: "",
-    guest: "",
-    location: "",
-    date: "",
-    celebrant: "",
-  });
-  const [invitations, setInvitations] = useState<any[]>([]);
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const storage = new Storage();
+const localizer = momentLocalizer(moment);
+
+interface Event {
+  title: string;
+  title1: string;
+  start: Date;
+  end: Date;
+  type?: string;
+  details?: string;
+  icon?: string; // Asegúrate de que el evento tenga un campo icon
+}
+
+const EventsCalendarView: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    const initStorage = async () => {
-      await storage.create();
-      const storedInvitations = await storage.get("invitations");
-      if (storedInvitations) setInvitations(storedInvitations);
+    // Cargar todos los eventos almacenados desde `storageCalendario` al montar el componente
+    const loadEvents = async () => {
+      const keys = await storageCalendario.keys();
+      const loadedEvents: Event[] = [];
+
+      for (const key of keys) {
+        const storedEvent = await storageCalendario.get(key);
+        if (storedEvent && storedEvent.eventType && storedEvent.eventDate && storedEvent.eventTime) {
+          const start = new Date(`${storedEvent.eventDate}T${storedEvent.eventTime}`);
+          const end = new Date(start);
+          end.setHours(end.getHours() + 1);
+
+          loadedEvents.push({
+            title:  storedEvent.icon, 
+            title1: `Programaste un evento de: ${storedEvent.eventType} para ${storedEvent.inviteeName}.`,
+            start,
+            end,
+            type: storedEvent.eventType,
+            details: `Evento programado para el ${storedEvent.eventDate} a las ${storedEvent.eventTime}.`,
+            icon: storedEvent.icon, // Cargar el icono
+          });
+        }
+      }
+
+      // Evitar duplicados y actualizar el estado con los eventos cargados
+      setEvents(loadedEvents);
     };
-    initStorage();
-  }, []);
 
-  const saveInvitation = async () => {
-    if (!eventData.type || !eventData.guest || !eventData.location || !eventData.date) {
-      setToastMessage("Por favor, completa todos los campos requeridos.");
-      return;
+    loadEvents();
+  }, []); // Este `useEffect` solo se ejecutará una vez, cuando el componente se monte
+
+  const deleteEvent = async (eventToDelete: Event) => {
+    // Eliminar el evento del estado
+    setEvents((prevEvents) => prevEvents.filter((event) => event !== eventToDelete));
+
+    // Eliminar el evento correspondiente del almacenamiento
+    const keys = await storageCalendario.keys();
+    for (const key of keys) {
+      const storedEvent = await storageCalendario.get(key);
+
+      // Verificar si el evento almacenado coincide con el evento a eliminar
+      if (
+        storedEvent &&
+        storedEvent.eventType === eventToDelete.type &&
+        new Date(`${storedEvent.eventDate}T${storedEvent.eventTime}`).getTime() === eventToDelete.start.getTime()
+      ) {
+        await storageCalendario.remove(key); // Eliminar el evento de storage
+        console.log(`Evento con clave ${key} eliminado.`);
+        break; // Detenerse después de encontrar y eliminar el evento
+      }
     }
-
-    const newInvitation = { ...eventData, id: Date.now() };
-    const updatedInvitations = [...invitations, newInvitation];
-    setInvitations(updatedInvitations);
-    await storage.set("invitations", updatedInvitations);
-
-    setEventData({ type: "", guest: "", location: "", date: "", celebrant: "" });
-    setToastMessage("¡Invitación guardada con éxito!");
-  };
-
-  const deleteInvitation = async (id: number) => {
-    const updatedInvitations = invitations.filter((invitation) => invitation.id !== id);
-    setInvitations(updatedInvitations);
-    await storage.set("invitations", updatedInvitations);
-    setToastMessage("Invitación eliminada.");
-  };
-
-  const renderCards = () => {
-    return invitations.map((invitation) => (
-      <div
-        key={invitation.id}
-        className={`event-card ${invitation.type.toLowerCase()}`}
-      >
-        <div className="card-header">
-          <div className="icon"></div>
-          <h2>
-            {invitation.type === "Cumpleaños"
-              ? "¡Feliz Cumpleaños!"
-              : invitation.type === "Boda"
-              ? "¡Felicidades por la boda!"
-              : invitation.type === "Fiesta"
-              ? "¡Es hora de una Fiesta!"
-              : "¡Próxima Reunión!"}
-          </h2>
-        </div>
-        <div className="card-body">
-          <p><strong>Invitado:</strong> {invitation.guest}</p>
-          <p><strong>Lugar:</strong> {invitation.location}</p>
-          <p><strong>Fecha:</strong> {new Date(invitation.date).toLocaleString()}</p>
-          {invitation.type === "Cumpleaños" && (
-            <p><strong>Cumpleañero:</strong> {invitation.celebrant}</p>
-          )}
-        </div>
-        <div className="card-footer">
-          <IonButton
-            color="danger"
-            fill="solid"
-            onClick={() => deleteInvitation(invitation.id)}
-          >
-            Eliminar
-          </IonButton>
-        </div>
-      </div>
-    ));
   };
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Mis Eventos</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent>
-        <div className="form-container">
-          <h1>Crear Invitación</h1>
-          <IonList>
-            <IonItem>
-              <IonLabel position="floating">Tipo de Evento</IonLabel>
-              <IonSelect
-                value={eventData.type}
-                placeholder="Selecciona"
-                onIonChange={(e) => setEventData({ ...eventData, type: e.detail.value })}
-              >
-                <IonSelectOption value="Cumpleaños">Cumpleaños</IonSelectOption>
-                <IonSelectOption value="Boda">Boda</IonSelectOption>
-                <IonSelectOption value="Fiesta">Fiesta</IonSelectOption>
-                <IonSelectOption value="Reunión">Reunión</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Invitado</IonLabel>
-              <IonInput
-                value={eventData.guest}
-                onIonChange={(e) => setEventData({ ...eventData, guest: e.detail.value! })}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Lugar</IonLabel>
-              <IonInput
-                value={eventData.location}
-                onIonChange={(e) => setEventData({ ...eventData, location: e.detail.value! })}
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Fecha y Hora</IonLabel>
-              <IonDatetime
-                value={eventData.date}
-                onIonChange={(e) =>
-                  setEventData({
-                    ...eventData,
-                    date: typeof e.detail.value === "string" ? e.detail.value : "",
-                  })
-                }
-              />
-            </IonItem>
-            {eventData.type === "Cumpleaños" && (
-              <IonItem>
-                <IonLabel position="floating">Cumpleañero</IonLabel>
-                <IonInput
-                  value={eventData.celebrant}
-                  onIonChange={(e) => setEventData({ ...eventData, celebrant: e.detail.value! })}
-                />
-              </IonItem>
-            )}
-          </IonList>
-          <IonButton expand="block" onClick={saveInvitation}>
-            Guardar Invitación
-          </IonButton>
+        <div style={{ height: '500px' }}>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ margin: '20px' }}
+            views={['month', 'week', 'day']}
+          />
         </div>
-        <div className="cards-container">{renderCards()}</div>
-        <IonToast
-          isOpen={!!toastMessage}
-          message={toastMessage}
-          duration={2000}
-          onDidDismiss={() => setToastMessage("")}
-        />
+
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">Eventos programados</h2>
+          {events.length === 0 ? (
+            <p>No hay eventos programados.</p>
+          ) : (
+            events.map((event, index) => (
+              <IonCard key={index}>
+                <IonCardHeader>
+                  <IonCardTitle>{event.title1}</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  {event.details}
+                  <IonButton 
+                    color="danger" 
+                    onClick={() => deleteEvent(event)} 
+                    style={{ marginTop: '10px' }}
+                  >
+                    Eliminar Evento
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+            ))
+          )}
+        </div>
       </IonContent>
     </IonPage>
   );
 };
 
-export default Tab2;
+export default EventsCalendarView;

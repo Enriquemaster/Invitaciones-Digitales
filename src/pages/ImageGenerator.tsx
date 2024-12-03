@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonButton, IonContent, IonInput, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonLabel } from '@ionic/react';
 import ShimmerButton from "@/components/ui/shimmer-button";
 import { useHistory } from 'react-router-dom'; // Importar useHistory
+import storageCalendario from './storage/storageCalendario'; 
 import confetti from "canvas-confetti";
 
+// Define un tipo para los eventos
+type EventData = {
+  inviteeName: string;
+  eventDate: string;
+  eventTime: string;
+  eventType: string;
+  icon?: string; // Propiedad opcional icon
+};
+
+
+  
 const EventInvitationGenerator: React.FC = () => {
   // Estados para los campos de entrada
   const [inviteeName, setInviteeName] = useState<string>(''); // Nombre del invitado
@@ -21,11 +33,15 @@ const EventInvitationGenerator: React.FC = () => {
   const [meetingOrganizer, setMeetingOrganizer] = useState<string>(''); // Organizador de la reunión
   const [asunto, setAsunto] = useState<string>(''); // Asunto de la reunión
   const [organizador, setOrganizer] = useState<string>(''); // Organizador de la reunión
+  
+  
   const history = useHistory(); // Inicializar useHistory
 
   const handleShareInvitation = () => {
-    history.push('/capturarInvitacion', { responseText, invitationData  }); // Navegar y pasar el texto
+    history.push('/capturarInvitacion', { responseText, invitationData, eventType  }); 
+   
   };
+
 
 
  // Crear un objeto con los datos relevantes que deseas pasar
@@ -43,19 +59,84 @@ const EventInvitationGenerator: React.FC = () => {
   meetingOrganizer,
   asunto,
   organizador,
+  
 };
 
 
+const clearStorage = async () => {
+  await storageCalendario.clear(); // Borra todo el almacenamiento
+  console.log("Almacenamiento limpiado.");
+};
+
+
+let eventList: EventData[] = []; // Arreglo de eventos
+ // Función para guardar en el almacenamiento
+ const saveToStorage = async () => {
+  const eventData: EventData = {
+    inviteeName,
+    eventDate,
+    eventTime,
+    eventType,
+    
+  };
+
+ 
+ if (eventType === 'cumpleaños') {
+  eventData.icon = '🎂'; 
+}
+
+if (eventType === 'boda') {
+  eventData.icon = '👰';
+}
+
+if (eventType === 'fiesta') {
+  eventData.icon = '🥳';
+}
+
+if (eventType === 'reunion') {
+  eventData.icon = '🧑‍🤝‍🧑';
+}
+
+
+
+// Agregar el evento al arreglo
+eventList.push(eventData);
+
+   // Usar un identificador único para cada evento
+   const timestamp = new Date().toISOString();
+   await storageCalendario.set(`eventData-${timestamp}`, eventData);
+  console.log('Datos guardados en almacenamiento:', eventData);
+};
+
+
+ // Función para mostrar todos los datos almacenados
+const showAllFromStorage = async () => {
+  const allKeys = await storageCalendario.keys();
+  
+  // Definir el tipo del objeto como un índice genérico
+  const allData: { [key: string]: any } = {};
+
+  for (const key of allKeys) {
+    const value = await storageCalendario.get(key);
+    allData[key] = value; // TypeScript ya no se quejará
+  }
+
+  console.log('Datos en el almacenamiento:', allData);
+};
 
   const handleGenerateInvitation = async () => {
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'cumpleaños' && (!birthdayName || !birthdayAge))) {
       setResponseText(`¡Hola, ${inviteeName}! 
-      Tenemos el placer de invitarte a un evento único y especial que no querrás perderte. Este evento tendrá lugar el próximo ${eventDate} a las ${eventTime} horas en ${eventLocation}, un lugar especialmente preparado para esta ocasión tan memorable. 
+      Tenemos el placer de invitarte a un evento único y especial que no querrás perderte. Este evento tendrá lugar el próximo ${eventDate} a las ${eventTime} horasen ${eventLocation}, un lugar especialmente preparado para esta ocasión tan memorable. 
 
       Nos encantaría contar con tu presencia, ya que tu compañía hará que este día sea aún más especial y significativo. Prepárate para disfrutar de una velada llena de momentos inolvidables, risas y una experiencia que quedará grabada en nuestros corazones.
 
       ¡Marca la fecha en tu calendario y ven a celebrar con nosotros! Te estaremos esperando con los brazos abiertos y mucha alegría. ¡No faltes!`);
+       // Guarda los datos// Navegar y pasar el texto
+       saveToStorage();
       return; // Verifica que todos los campos estén llenos
+   
+       
     }
 
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'boda' && (!nameperson1 || !nameperson2))) {
@@ -67,6 +148,7 @@ const EventInvitationGenerator: React.FC = () => {
   
       Marca la fecha en tu calendario y acompáñanos para celebrar este día tan importante. Estamos ansiosos por compartir con ustedes este hermoso momento. ¡Te esperamos con los brazos abiertos!
       `);
+      saveToStorage();
       return; // Verifica que todos los campos estén llenos
     }
 
@@ -78,6 +160,7 @@ const EventInvitationGenerator: React.FC = () => {
       Esperamos contar contigo para compartir ideas, colaborar y trabajar juntos hacia nuestros objetivos comunes. Tu asistencia marcará una diferencia significativa y enriquecerá esta conversación tan importante.
       
       Por favor, confirma tu asistencia a la brevedad. ¡Te esperamos con mucho entusiasmo!`);
+      saveToStorage();
       return;
     }
 
@@ -89,6 +172,7 @@ const EventInvitationGenerator: React.FC = () => {
       Habrá música, comida, y actividades emocionantes que estamos seguros de que disfrutarás. Tu presencia hará que esta celebración sea aún más memorable.
       
       ¡Ven y únete a nosotros para compartir momentos inolvidables! No olvides confirmar tu asistencia. ¡Te esperamos!`);
+      saveToStorage();
       return;
     }
 
@@ -147,9 +231,14 @@ const EventInvitationGenerator: React.FC = () => {
 
 
   const handleBothActions = () => {
-    handleConfetti(); // Llama al método que maneja el confeti
+   //  handleConfetti(); // Llama al método que maneja el confeti
     handleGenerateInvitation(); // Llama al método que maneja la generación de invitaciones
   };
+
+   // Ejecutar al cargar la página
+   useEffect(() => {
+    showAllFromStorage(); // Llama a la función cuando el componente se monta
+  }, []); 
 
   return (
     <IonPage>
@@ -208,17 +297,26 @@ const EventInvitationGenerator: React.FC = () => {
 
           <div className="space-y-4">
             <IonLabel className="font-semibold text-lg">Tipo de evento</IonLabel>
-            <IonSelect
-              value={eventType}
-              onIonChange={(e) => setEventType(e.detail.value!)}
-              placeholder="Selecciona el tipo de evento"
-              className="w-full border border-gray-300 p-2 rounded-md"
-            >
-              <IonSelectOption value="cumpleaños">Cumpleaños</IonSelectOption>
-              <IonSelectOption value="boda">Boda</IonSelectOption>
-              <IonSelectOption value="fiesta">Fiesta</IonSelectOption>
-              <IonSelectOption value="reunion">Reunión</IonSelectOption>
-            </IonSelect>
+            <div className="space-y-4">
+  <label htmlFor="eventType" className="font-semibold text-lg">
+    Tipo de evento
+  </label>
+  <select
+    id="eventType"
+    value={eventType}
+    onChange={(e) => setEventType(e.target.value)}
+    className="w-full border border-gray-300 p-2 rounded-md"
+  >
+    <option value="" disabled>
+      Selecciona el tipo de evento
+    </option>
+    <option value="cumpleaños">Cumpleaños</option>
+    <option value="boda">Boda</option>
+    <option value="fiesta">Fiesta</option>
+    <option value="reunion">Reunión</option>
+  </select>
+</div>
+
           </div>
 
           {eventType === 'cumpleaños' && (
@@ -335,9 +433,9 @@ const EventInvitationGenerator: React.FC = () => {
         </div>
 
         <div className="flex justify-center p-4">
-             <ShimmerButton className="w-full" onClick={handleShareInvitation}>
+             <IonButton className="w-full" onClick={handleShareInvitation}>
               Compartir invitación
-            </ShimmerButton>
+            </IonButton>
           </div>
       </IonContent>
     </IonPage>

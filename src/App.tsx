@@ -82,9 +82,12 @@ const App: React.FC = () => (
           <Route path="/Crear-evento">
             <CrearEvento/>
           </Route>
-          <Route path="/ImageGenerator">
-            <ImageGenerator/>
-          </Route>
+
+          <Route exact path="/ImageGenerator" component={ImageGenerator} />
+
+       
+        
+          
           <Route exact path="/">
             <Redirect to="/tab1" />
           </Route>

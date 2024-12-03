@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonText, IonButton } from '@ionic/react';
 import { useLocation, useHistory } from 'react-router-dom';
+import storageCalendario from './storage/storageCalendario'; // Importa tu configuración de storage
 import html2canvas from 'html2canvas';
 import { cloudinaryConfig } from '../config/cloudinaryConfig';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -15,6 +16,8 @@ import 'swiper/css/pagination';
 import './css/felizcum.css';
 import '../theme/variables.css';
 import '@fontsource/luckiest-guy';
+
+
 
 interface LocationState {
   responseText: string;
@@ -62,12 +65,26 @@ const CapturarInvitacion: React.FC = () => {
         const imageUrl = canvas.toDataURL();
         history.push({
           pathname: '/CompartirPor',
-          state: { imageUrl, responseText, eventType },
+          state: { imageUrl, responseText, eventType, eventDate,eventTime },
         });
       });
     }
   };
 
+  console.log("Tipo de evento:", eventType);
+
+
+  const showAllStoredItems = () => {
+    const storedItems: { [key: string]: string } = {}; // Para almacenar las claves y valores
+    // Recorremos todas las claves del localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        storedItems[key] = localStorage.getItem(key) || ''; // Guardamos la clave y el valor
+      }
+    }
+    console.log('Stored Items:', storedItems); // Muestra los elementos almacenados en la consola
+  };
 
     // Función para manejar el clic en una imagen
     const handleImageClick = (src: string) => {
@@ -112,6 +129,7 @@ const CapturarInvitacion: React.FC = () => {
         '/images/boda/boda3.png',
         '/images/boda/boda4.png',
         '/images/boda/boda5.png',
+        
       ];
 
       // Rutas de imágenes de formales
@@ -277,24 +295,25 @@ const CapturarInvitacion: React.FC = () => {
     <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
       <SparklesText text="Diseños de Boda"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
       <Swiper
-        spaceBetween={15}
-        slidesPerView={1.2}
-        centeredSlides={true}
-        loop={true}
-        pagination={{ clickable: true }}
-        className="rounded-md px-6"
-      >
-        {imagesboda.map((src, index) => (
-          <SwiperSlide key={index} className="pt-4 px-6">
-            <img
-              src={src}
-              alt={`Slide ${index}`}
-              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
-              onClick={() => handleImageClick(src)}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+  spaceBetween={15} // Espacio entre diapositivas
+  slidesPerView={1.2} // Cuántas diapositivas mostrar a la vez (parcialmente visible)
+  slidesPerGroup={1} // Cuántas diapositivas avanzar en cada movimiento
+  centeredSlides={true} // Centrar la diapositiva activa
+  loop={true} // Activar modo bucle
+  pagination={{ clickable: true }} // Agregar puntos de paginación
+  className="rounded-md px-6"
+>
+  {imagesboda.map((src, index) => (
+    <SwiperSlide key={index} className="pt-4 px-6">
+      <img
+        src={src}
+        alt={`Slide ${index}`}
+        className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+        onClick={() => handleImageClick(src)}
+      />
+    </SwiperSlide>
+  ))}
+</Swiper>
     </div>
   </>
 )}
@@ -376,7 +395,7 @@ const CapturarInvitacion: React.FC = () => {
     <p><strong>Hora del evento:</strong> {eventTime}</p>
     <p><strong>Lugar del evento:</strong> {eventLocation}</p>
     <p><strong>Tipo de evento:</strong> {eventType}</p>
-    {eventType === 'cumpleaños' && (
+    {eventType === '' && (
       <>
         <p><strong>Nombre del cumpleañero:</strong> {birthdayName}</p>
         <p><strong>Edad del cumpleañero:</strong> {birthdayAge}</p>
@@ -403,7 +422,7 @@ const CapturarInvitacion: React.FC = () => {
   <IonButton
     color="primary"
     className="px-8 py-4 text-lg font-semibold rounded-lg transition duration-300 hover:bg-blue-600"
-    onClick={captureAsImage}
+    onClick={() => {captureAsImage(); showAllStoredItems(); }}
   >
     Capturar Invitación
   </IonButton>
