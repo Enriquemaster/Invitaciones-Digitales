@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonText, IonButton } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonText, IonButton, IonSelect, IonSelectOption, IonModal, IonFooter } from '@ionic/react';
 import { useLocation, useHistory } from 'react-router-dom';
 import storageCalendario from './storage/storageCalendario'; // Importa tu configuración de storage
 import html2canvas from 'html2canvas';
@@ -57,6 +57,14 @@ const CapturarInvitacion: React.FC = () => {
     asunto,
     organizador
   } = invitationData || {}; 
+
+  const [showModal, setShowModal] = useState(false);
+  const [textColor, setTextColor] = useState('black'); // Color inicial
+  const [fontFamily, setFontFamily] = useState('Arial'); // Fuente inicial
+  const [headerTextColor, setHeaderTextColor] = useState('black');
+  const [backgroundOpacity, setBackgroundOpacity] = useState(1);
+
+
 
   const captureAsImage = () => {
     const invitationElement = document.getElementById('invitation');
@@ -135,8 +143,21 @@ const CapturarInvitacion: React.FC = () => {
       // Rutas de imágenes de formales
       const imagesfiesta = [
         '/images/fiesta/fiesta.png',
-        '/images/fiesta/fiesta1.png',
         '/images/fiesta/fiesta2.png',
+        '/images/fiesta/f4.png',
+      ];
+
+      const imagesfiesta1 = [
+        '/images/fiesta/f5.png',
+        '/images/fiesta/f6.png',
+        '/images/fiesta/f6.png',
+      ];
+
+      const imagesfiesta2 = [
+        '/images/fiesta/f3.png',
+        '/images/fiesta/f2.png',
+        '/images/fiesta/f1.png',
+        '/images/fiesta/fiesta1.png',
       ];
 
 
@@ -145,25 +166,40 @@ const CapturarInvitacion: React.FC = () => {
         '/images/reuniones/r1.png',
         '/images/reuniones/r2.png',
         '/images/reuniones/r3.png',
-        '/images/reuniones/r4.png',
-        '/images/reuniones/r5.png',
-        '/images/reuniones/r6.png',
         '/images/reuniones/r7.png',
         '/images/reuniones/r8.png',
+        '/images/reuniones/r9.png',
+        '/images/reuniones/r10.png',
       ];
 
       const imagesreuniones1 = [
-        '/images/reuniones/r9.png',
-        '/images/reuniones/r10.png',
+        '/images/reuniones/r4.png',
+        '/images/reuniones/r5.png',
+        '/images/reuniones/r6.png',
         '/images/reuniones/r11.png',
         '/images/reuniones/r12.png',
         '/images/reuniones/r13.png',
       ];
 
+      const imagesreuniones2 = [
+        '/images/reuniones/1.png',
+        '/images/reuniones/2.png',
+        '/images/reuniones/3.png',
+        '/images/reuniones/4.png',
+      ];
+
+      const imagesboda1 = [
+        '/images/boda/b1.png',
+        '/images/boda/b2.png',
+        '/images/boda/b3.png',
+        '/images/boda/b4.png',
+      ];
 
 
 
-  const allImages = [...images, ...images1, ...images2, ...imagesboda, ... imagesreuniones, ...imagesreuniones1];
+
+
+  const allImages = [...images, ...images1, ...images2, ...imagesboda, ... imagesreuniones, ...imagesreuniones1, ...imagesreuniones2];
 
   const [selectedImage, setSelectedImage] = useState<string>(allImages[0]);
 
@@ -261,7 +297,7 @@ const CapturarInvitacion: React.FC = () => {
 
     {/* Sección de Carrusel: Para Adolescentes */}
     <div className="mb-6  mt-6 bg-white rounded-xl px-4">
-    <SparklesText text="Diseños Normales"className="text-3xl text-xl text-center font-semibold mb-4 text-black" id="cards-title1"/>
+    <SparklesText text="Diseños de Pastel"className="text-3xl text-xl text-center font-semibold mb-4 text-black" id="cards-title1"/>
       <Swiper
         spaceBetween={15}
         slidesPerView={1.2}
@@ -283,29 +319,7 @@ const CapturarInvitacion: React.FC = () => {
       </Swiper>
     </div>
 
-    {/* Sección de Carrusel: Formales */}
-    <div className="mb-6  mt-6 bg-white rounded-md px-4">
-    <SparklesText text="Diseños Formales"className="text-3xl text-center font-semibold mb-4 text-black" id="cards-title2"/>
-      <Swiper
-        spaceBetween={15}
-        slidesPerView={1.2}
-        centeredSlides={true}
-        loop={true}
-        pagination={{ clickable: true }}
-        className="rounded-md px-6"
-      >
-        {images.map((src, index) => (
-          <SwiperSlide key={index} className="pt-4 px-6">
-            <img
-              src={src}
-              alt={`Slide ${index}`}
-              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
-              onClick={() => handleImageClick(src)}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+  
   </>
 )}
 
@@ -337,6 +351,31 @@ const CapturarInvitacion: React.FC = () => {
   ))}
 </Swiper>
     </div>
+
+    <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Otros Diseños"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+  spaceBetween={15} // Espacio entre diapositivas
+  slidesPerView={1.2} // Cuántas diapositivas mostrar a la vez (parcialmente visible)
+  slidesPerGroup={1} // Cuántas diapositivas avanzar en cada movimiento
+  centeredSlides={true} // Centrar la diapositiva activa
+  loop={true} // Activar modo bucle
+  pagination={{ clickable: true }} // Agregar puntos de paginación
+  className="rounded-md px-6"
+>
+  {imagesboda1.map((src, index) => (
+    <SwiperSlide key={index} className="pt-4 px-6">
+      <img
+        src={src}
+        alt={`Slide ${index}`}
+        className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+        onClick={() => handleImageClick(src)}
+      />
+    </SwiperSlide>
+  ))}
+</Swiper>
+    </div>
+
   </>
 )}
 
@@ -345,7 +384,7 @@ const CapturarInvitacion: React.FC = () => {
   <>
     {/* Sección de Carrusel: Para Niños */}
     <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
-      <SparklesText text="Diseños de fiestas"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <SparklesText text="Diseños Variados"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
       <Swiper
         spaceBetween={15}
         slidesPerView={1.2}
@@ -366,6 +405,53 @@ const CapturarInvitacion: React.FC = () => {
         ))}
       </Swiper>
     </div>
+
+    <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Diseños de Disco"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+        spaceBetween={15}
+        slidesPerView={1.2}
+        centeredSlides={true}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="rounded-md px-6"
+      >
+        {imagesfiesta1.map((src, index) => (
+          <SwiperSlide key={index} className="pt-4 px-6">
+            <img
+              src={src}
+              alt={`Slide ${index}`}
+              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+              onClick={() => handleImageClick(src)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
+    <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Diseños de Bebidas"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+        spaceBetween={15}
+        slidesPerView={1.2}
+        centeredSlides={true}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="rounded-md px-6"
+      >
+        {imagesfiesta2.map((src, index) => (
+          <SwiperSlide key={index} className="pt-4 px-6">
+            <img
+              src={src}
+              alt={`Slide ${index}`}
+              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+              onClick={() => handleImageClick(src)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
   </>
 )}
 
@@ -375,7 +461,7 @@ const CapturarInvitacion: React.FC = () => {
   <>
     {/* Sección de Carrusel: Para Niños */}
     <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
-      <SparklesText text="Temas Claros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <SparklesText text="Temas Variados"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
       <Swiper
         spaceBetween={15}
         slidesPerView={1.2}
@@ -398,9 +484,8 @@ const CapturarInvitacion: React.FC = () => {
     </div>
 
 
-     {/* Sección de Carrusel: Para Niños */}
      <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
-      <SparklesText text="Temas Oscuros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <SparklesText text="Temas Claros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
       <Swiper
         spaceBetween={15}
         slidesPerView={1.2}
@@ -422,13 +507,35 @@ const CapturarInvitacion: React.FC = () => {
       </Swiper>
     </div>
 
+    <div className="mb-6  mt-6 bg-white rounded-xl  px-4 ">
+      <SparklesText text="Temas Oscuros"className="text-2xl text-center font-semibold mb-4 text-black" id="cards-title"/>
+      <Swiper
+        spaceBetween={15}
+        slidesPerView={1.2}
+        centeredSlides={true}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="rounded-md px-6"
+      >
+        {imagesreuniones2.map((src, index) => (
+          <SwiperSlide key={index} className="pt-4 px-6">
+            <img
+              src={src}
+              alt={`Slide ${index}`}
+              className="w-full h-56 object-cover rounded-lg bg-blue-500 rounded transition duration-300 hover:scale-105 p-2"
+              onClick={() => handleImageClick(src)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+
+
+
+
 
   </>
 )}
-
-
-
-
 
 <div className="overflow-x-auto flex ">
           {/* Sección de texto */}
@@ -445,8 +552,6 @@ const CapturarInvitacion: React.FC = () => {
             )}
           </div>
           
-
-   
           
   <div
   id="invitation"
@@ -465,11 +570,18 @@ const CapturarInvitacion: React.FC = () => {
 
 
   {/* Contenido */}
-  <div className="text-center mb-6 relative z-10">
-    <h1 className="text-3xl font-bold text-purple-600">¡Estás invitado!</h1>
-    <p className="text-lg mt-2 text-gray-600">A un evento muy especial</p>
+  <div className="text-center mb-6 relative z-10" style={{
+        color: textColor,
+        fontFamily: fontFamily,
+        opacity: backgroundOpacity, // Dinámica opacidad
+      }}>
+      <h1 className="text-3xl font-bold" style={{ color: headerTextColor }}>
+        ¡Estás invitado!
+      </h1>
+    <p className="text-lg mt-2 ">A un evento muy especial</p>
     {/* Mostrar los detalles del evento */}
-  <div className="mb-4 text-justify">
+  <div className="mb-4 text-justify"
+  >
   {inviteeName && (
   <p><strong>Nombre del invitado:</strong> {inviteeName}</p>
 )}
@@ -483,44 +595,206 @@ const CapturarInvitacion: React.FC = () => {
         <p><strong>Edad del cumpleañero:</strong> {birthdayAge}</p>
       </>
     )}
-
     {eventType === 'boda' && (
       <>
         <p><strong>Nombre del Esposo:</strong> {nameperson1}</p>
         <p><strong>Edad de la Esposa:</strong> {nameperson2}</p>
       </>
     )}
-
 {eventType === 'fiesta' && (
       <>
         <p><strong>Asunto:</strong> {asunto}</p>
         <p><strong>Organizador:</strong> {organizador}</p>
       </>
     )}
-
-
   </div>
-  </div>
-
   
+  </div>
 </div>
 
         </div>
+        
 
-{/* Botón para capturar la invitación */}
-<div className="flex justify-center mt-8 mb-8">
+        <div className="flex justify-center items-center gap-4 mt-2">
   <IonButton
     color="primary"
-    className="px-8 py-4 text-lg font-semibold rounded-lg transition duration-300 hover:bg-blue-600"
-    onClick={() => {captureAsImage(); showAllStoredItems(); }}
+    className=""
+    onClick={() => {
+      captureAsImage();
+      showAllStoredItems();
+    }}
   >
-    Capturar Invitación
+    Compartir Invitación
   </IonButton>
+  <IonButton className="w-16 text-center" onClick={() => setShowModal(true)}>🖊️</IonButton>
 </div>
+
+
+
+
+<IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+  <IonHeader>
+    <IonToolbar>
+      <IonTitle>Personalizar Invitación</IonTitle>
+    </IonToolbar>
+  </IonHeader>
+ 
+    {/* Vista previa en el modal */}
+    <div className="relative z-10 border rounded-lg p-6 shadow-md bg-white">
+  <div
+    className="text-center mb-6 rounded-lg overflow-hidden bg-cover bg-center p-4 relative"
+    style={{
+      color: textColor,
+      fontFamily: fontFamily,
+      backgroundImage: `url(${selectedImage})`,
+      backgroundColor: "rgba(255, 255, 255, 0.8)", // Fondo ligeramente transparente
+      opacity: backgroundOpacity,
+    }}
+  >
+    <h1 className="text-4xl font-extrabold mb-4" style={{ color: headerTextColor }}>
+      ¡Estás invitado!
+    </h1>
+    <p className="text-base italic mb-6">A un evento muy especial</p>
+
+    <div className="text-left px-4">
+      {inviteeName && (
+        <p className="mb-2">
+          <strong className="font-semibold">Nombre del invitado:</strong> {inviteeName}
+        </p>
+      )}
+      <p className="mb-2">
+        <strong className="font-semibold">Fecha del evento:</strong> {eventDate}
+      </p>
+      <p className="mb-2">
+        <strong className="font-semibold">Hora del evento:</strong> {eventTime}
+      </p>
+      <p className="mb-2">
+        <strong className="font-semibold">Lugar del evento:</strong> {eventLocation}
+      </p>
+      <p className="mb-4">
+        <strong className="font-semibold">Tipo de evento:</strong> {eventType}
+      </p>
+
+      {/* Condicionales según el tipo de evento */}
+      {eventType === "" && (
+        <>
+          <p className="mb-2">
+            <strong className="font-semibold">Nombre del cumpleañero:</strong> {birthdayName}
+          </p>
+          <p className="mb-4">
+            <strong className="font-semibold">Edad del cumpleañero:</strong> {birthdayAge}
+          </p>
+        </>
+      )}
+      {eventType === "boda" && (
+        <>
+          <p className="mb-2">
+            <strong className="font-semibold">Nombre del Esposo:</strong> {nameperson1}
+          </p>
+          <p className="mb-4">
+            <strong className="font-semibold">Nombre de la Esposa:</strong> {nameperson2}
+          </p>
+        </>
+      )}
+      {eventType === "fiesta" && (
+        <>
+          <p className="mb-2">
+            <strong className="font-semibold">Asunto:</strong> {asunto}
+          </p>
+          <p className="mb-4">
+            <strong className="font-semibold">Organizador:</strong> {organizador}
+          </p>
+        </>
+      )}
+    </div>
+  </div>
+
+  {/* Opciones de personalización */}
+  <div className="space-y-6">
+    {/* Color del encabezado */}
+    <div>
+      <label className="block mb-2 font-medium">Color del texto del encabezado</label>
+      <IonSelect
+        value={headerTextColor}
+        placeholder="Selecciona un color"
+        onIonChange={(e) => setHeaderTextColor(e.detail.value)}
+      >
+        <IonSelectOption value="black">Negro</IonSelectOption>
+        <IonSelectOption value="white">Blanco</IonSelectOption>
+        <IonSelectOption value="blue">Azul</IonSelectOption>
+        <IonSelectOption value="red">Rojo</IonSelectOption>
+        <IonSelectOption value="green">Verde</IonSelectOption>
+      </IonSelect>
+    </div>
+
+    {/* Color del texto */}
+    <div>
+      <label className="block mb-2 font-medium">Color del texto</label>
+      <IonSelect
+        value={textColor}
+        placeholder="Selecciona un color"
+        onIonChange={(e) => setTextColor(e.detail.value)}
+      >
+        <IonSelectOption value="black">Negro</IonSelectOption>
+        <IonSelectOption value="white">Blanco</IonSelectOption>
+        <IonSelectOption value="blue">Azul</IonSelectOption>
+        <IonSelectOption value="red">Rojo</IonSelectOption>
+        <IonSelectOption value="green">Verde</IonSelectOption>
+      </IonSelect>
+    </div>
+
+    {/* Selección de fuente */}
+    <div>
+      <label className="block mb-2 font-medium">Fuente</label>
+      <IonSelect
+        value={fontFamily}
+        placeholder="Selecciona una fuente"
+        onIonChange={(e) => setFontFamily(e.detail.value)}
+      >
+        <IonSelectOption value="Arial">Arial</IonSelectOption>
+        <IonSelectOption value="Georgia">Georgia</IonSelectOption>
+        <IonSelectOption value="Courier New">Courier New</IonSelectOption>
+        <IonSelectOption value="Times New Roman">Times New Roman</IonSelectOption>
+      </IonSelect>
+    </div>
+
+    {/* Selección de opacidad */}
+    <div>
+      <label className="block mb-2 font-medium">Opacidad del fondo</label>
+      <IonSelect
+        value={backgroundOpacity}
+        placeholder="Selecciona opacidad"
+        onIonChange={(e) => setBackgroundOpacity(parseFloat(e.detail.value))}
+      >
+        <IonSelectOption value={0.1}>10%</IonSelectOption>
+        <IonSelectOption value={0.5}>50%</IonSelectOption>
+        <IonSelectOption value={0.8}>80%</IonSelectOption>
+        <IonSelectOption value={0.9}>90%</IonSelectOption>
+        <IonSelectOption value={1}>100%</IonSelectOption>
+      </IonSelect>
+    </div>
+  </div>
+
+  {/* Botón de guardar */}
+  <div className="mt-8">
+    <IonButton expand="block" color="primary" onClick={() => setShowModal(false)}>
+      Guardar cambios
+    </IonButton>
+  </div>
+</div>
+      </IonModal>
+    
 
 
 
 </IonContent>
+
+<IonFooter className=''>
+        <IonToolbar className=''>
+          <IonTitle className="text-center ">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
+      
 </IonPage>
 );
 };

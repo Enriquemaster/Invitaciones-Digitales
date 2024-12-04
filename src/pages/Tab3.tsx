@@ -8,6 +8,7 @@ import {
   IonModal,
   IonImg,
   IonIcon,
+  IonFooter,
 } from '@ionic/react';
 import { useState, useEffect } from 'react';
 import { Browser } from '@capacitor/browser';
@@ -58,7 +59,7 @@ const Tab3: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Mis Invitaciones</IonTitle>
+          <IonTitle>Tus Invitaciones Guardadas</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -115,7 +116,16 @@ const Tab3: React.FC = () => {
             )}
           </div>
         </IonModal>
+
+       
+
+
       </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <IonTitle className="text-center">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonButton, IonContent, IonInput, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonLabel, IonIcon } from '@ionic/react';
+import { IonButton, IonContent, IonInput, IonPage, IonText, IonHeader, IonToolbar, IonTitle, IonSelect, IonSelectOption, IonLabel, IonIcon, IonFooter } from '@ionic/react';
 import ShimmerButton from "@/components/ui/shimmer-button";
 import { useHistory } from 'react-router-dom'; // Importar useHistory
 import storageCalendario from './storage/storageCalendario'; 
@@ -143,7 +143,7 @@ const showAllFromStorage = async () => {
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'boda' && (!nameperson1 || !nameperson2))) {
       console.log(`nameperson1: ${nameperson1}, nameperson2: ${nameperson2}`);
       setResponseText(`¡Hola, ${inviteeName}!
-      Nos complace invitarte a un evento muy especial: ¡una boda! El enlace de ${nameperson1} y ${nameperson2} se celebrará el próximo ${eventDate} a las ${eventTime} en ${eventLocation}.
+      Nos complace invitarte a un evento muy especial: ¡una boda!que se celebrará el próximo ${eventDate} a las ${eventTime} en ${eventLocation}.
       
       Será una ocasión única llena de amor, alegría y momentos inolvidables, y sería un honor contar con tu presencia en este día tan significativo para ellos. ¡Ven a ser parte de esta hermosa celebración de unión!
   
@@ -156,7 +156,7 @@ const showAllFromStorage = async () => {
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'reunion' &&  (!meetingSubject || !meetingOrganizer))) {
       setResponseText(`¡Hola, ${inviteeName}!
 
-      Nos complace invitarte a una reunión especial organizada por ${meetingOrganizer}. Este importante encuentro se llevará a cabo el próximo ${eventDate} a las ${eventTime} en ${eventLocation}. Durante esta reunión, abordaremos el tema: "${meetingSubject}", un asunto de gran relevancia y que contará con tu valiosa participación.
+      Nos complace invitarte a una reunión especial. Este importante encuentro se llevará a cabo el próximo ${eventDate} a las ${eventTime} en ${eventLocation}. Durante esta reunión, abordaremos el tema: "${meetingSubject}", un asunto de gran relevancia y que contará con tu valiosa participación.
       
       Esperamos contar contigo para compartir ideas, colaborar y trabajar juntos hacia nuestros objetivos comunes. Tu asistencia marcará una diferencia significativa y enriquecerá esta conversación tan importante.
       
@@ -168,7 +168,7 @@ const showAllFromStorage = async () => {
     if (!inviteeName || !eventDate || !eventTime || !eventLocation || !eventType || (eventType === 'fiesta' &&  (!asunto || !organizador))) {
       setResponseText(`¡Hola, ${inviteeName}!
     
-      Nos encantaría invitarte a una fiesta que organizo  ${organizador} para disfrutar de un momento especial lleno de alegría y diversión. La fiesta se llevará a cabo el próximo ${eventDate} a las ${eventTime} en ${eventLocation}, un lugar perfecto para esta ocasión.
+      Nos encantaría invitarte a una fiesta que organizo. para disfrutar de un momento especial lleno de alegría y diversión. La fiesta se llevará a cabo el próximo ${eventDate} a las ${eventTime} en ${eventLocation}, un lugar perfecto para esta ocasión.
       
       Habrá música, comida, y actividades emocionantes que estamos seguros de que disfrutarás. Tu presencia hará que esta celebración sea aún más memorable.
       
@@ -245,7 +245,7 @@ const showAllFromStorage = async () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Generador de Invitaciones</IonTitle>
+          <IonTitle className='text-center'>Genera tu invitación</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -447,6 +447,11 @@ const showAllFromStorage = async () => {
             </ShimmerButton>
           </div>
       </IonContent>
+      <IonFooter className=''>
+        <IonToolbar className=''>
+          <IonTitle className="text-center ">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

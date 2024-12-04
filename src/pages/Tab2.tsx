@@ -9,7 +9,8 @@ import {
   IonCardHeader, 
   IonCardTitle, 
   IonCardContent, 
-  IonButton 
+  IonButton, 
+  IonFooter
 } from '@ionic/react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -89,7 +90,7 @@ const EventsCalendarView: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Mis Eventos</IonTitle>
+          <IonTitle className='text-center'>Tus Eventos</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -128,7 +129,19 @@ const EventsCalendarView: React.FC = () => {
             ))
           )}
         </div>
+
+        
+
+
+
       </IonContent>
+
+      <IonFooter>
+        <IonToolbar>
+          <IonTitle className="text-center">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
+      
     </IonPage>
   );
 };

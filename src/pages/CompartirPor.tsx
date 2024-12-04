@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { Browser } from '@capacitor/browser';
 import React, { useState, useRef } from 'react';
 import storage from './storage/storage'; // Importa tu configuración de storage
-import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
+import { IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonContent,IonPage, IonFooter } from '@ionic/react';
 import { cloudinaryConfig } from '../config/cloudinaryConfig';
 import confetti from "canvas-confetti";
 
@@ -147,8 +147,16 @@ const RutaInvitacion: React.FC = () => {
   
 
   return (
+    <IonPage > 
+      <IonHeader className='flex justify-center items-center'>
+        <IonToolbar className=' flex justify-center items-center'>
+          <IonTitle className='flex justify-center items-center'>Compartir Invitación</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent >
+
     <div className="p-6">
-      <h1 className="text-3xl font-bold text-center mb-4">Invitación Capturada</h1>
+      <h1 className="text-3xl font-bold text-center mb-4">Tu Invitación</h1>
 
  
     
@@ -170,28 +178,32 @@ const RutaInvitacion: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-4 gap-4 mt-8">
-        <div>
-          <button onClick={openWhatsApp}>
-            <img src="/iconos/whatsapp.png" alt="WhatsApp" className="rounded-lg mx-auto w-16 h-16" />
-          </button>
-          <p className="mt-2 text-sm font-medium text-center">WhatsApp</p>
-        </div>
-        <div>
-          <img src="/iconos/facebook.png" alt="Facebook" className="rounded-lg w-16 h-16 mx-auto" />
-          <p className="mt-2 text-sm font-medium text-center">Facebook</p>
-        </div>
-        <div>
-          <img src="/iconos/mensajes.png" alt="Mensajes" className="rounded-lg w-16 h-16 mx-auto" />
-          <p className="mt-2 text-sm font-medium text-center">Mensajes</p>
-        </div>
-        <div>
-          <button onClick={openGmailDirectly}>
-            <img src="/iconos/gmail.png" alt="Gmail" className="rounded-lg mx-auto w-16 h-16" />
-          </button>
-          <p className="mt-2 text-sm font-medium text-center">Abrir Gmail</p>
-        </div>
-      </div>
+<h1 className="flex flex-col items-center justify-center mt-2 font-bold ">Compartir por:</h1>
+<div className="flex flex-col items-center justify-center mt-8">
+  <div className="grid grid-cols-2 gap-2">
+    <div className="flex flex-col items-center px-4">
+      <button onClick={openWhatsApp}>
+        <img
+          src="/iconos/whatsapp.png"
+          alt="WhatsApp"
+          className="rounded-lg mx-auto w-16 h-16 "
+        />
+      </button>
+      <p className="mt-2 text-sm font-medium text-center">WhatsApp</p>
+    </div>
+    <div className="flex flex-col items-center">
+      <button onClick={openGmailDirectly}>
+        <img
+          src="/iconos/gmail.png"
+          alt="Gmail"
+          className="rounded-lg mx-auto w-16 h-16"
+        />
+      </button>
+      <p className="mt-2 text-sm font-medium text-center">Gmail</p>
+    </div>
+  </div>
+</div>
+
 
       <IonModal isOpen={showModal}>
         <IonHeader>
@@ -214,6 +226,13 @@ const RutaInvitacion: React.FC = () => {
         </IonContent>
       </IonModal>
     </div>
+    </IonContent>
+    <IonFooter>
+        <IonToolbar>
+          <IonTitle className="text-center">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
+</IonPage>
   );
 };
 

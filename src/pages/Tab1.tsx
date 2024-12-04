@@ -13,6 +13,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
+  IonFooter,
 } from "@ionic/react";
 import { add, calendarOutline, createOutline } from "ionicons/icons";
 import "./Tab1.css";
@@ -31,7 +32,7 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>EvoParty</IonTitle>
+          <IonTitle className="text-center">EvoParty</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -113,6 +114,14 @@ const Tab1: React.FC = () => {
             </IonFabButton>
           </IonFabList>
         </IonFab>
+
+        <IonFooter>
+        <IonToolbar>
+          <IonTitle className="text-center">© 2024 EvoParty</IonTitle>
+        </IonToolbar>
+      </IonFooter>
+
+
       </IonContent>
     </IonPage>
   );

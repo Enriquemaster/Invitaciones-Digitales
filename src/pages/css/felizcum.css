@@ -1,55 +1,34 @@
 /* Fondo general */
-#invitation {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 2rem auto;
-    font-family: 'Arial', sans-serif;
-  }
+
   
   /* Encabezado de la invitación */
   #invitation .text-center h1 {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #6b5b95; /* Un color morado suave */
     margin-bottom: 1rem;
   }
   
   #invitation .text-center p {
     font-size: 1.125rem;
-    color: #4a4a4a;
     margin-top: 0.5rem;
   }
   
   /* Detalles del evento */
   #invitation .mb-4 p {
     font-size: 1rem;
-    color: #333;
     margin-bottom: 0.5rem;
   }
   
-  #invitation .mb-4 p strong {
-    color: #6b5b95; /* Color para las etiquetas */
-  }
-  
+
   /* Estilo para el tipo de evento especial (cumpleaños) */
   #invitation .birthday-info p {
     font-size: 1rem;
-    color: #4a4a4a;
     margin-bottom: 0.5rem;
   }
   
-  #invitation .birthday-info p strong {
-    color: #ff6f61; /* Un color cálido para resaltar el cumpleaños */
-  }
   
-  /* Sombra y efectos para los elementos */
-  #invitation .shadow-lg {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
   
+
   /* Ajuste en los márgenes y el espacio */
   #invitation .text-center {
     margin-bottom: 2rem;
